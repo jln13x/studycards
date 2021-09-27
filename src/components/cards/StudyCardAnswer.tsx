@@ -21,6 +21,10 @@ export const StudyCardAnswer: React.FC<StudyCardAnswerProps> = ({
         my={8}
         overflowY={"scroll"}
         wordBreak="break-all"
+        pr={{
+          base: "4",
+          "2xl": "12"
+        }}
         sx={{
           "::-webkit-scrollbar": {
             width: "4",

@@ -1,21 +1,12 @@
 import { CheckCircleIcon } from "@chakra-ui/icons";
-import {
-  Button,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Spinner,
-  useBoolean
-} from "@chakra-ui/react";
+import { Button, Flex, Spinner, useBoolean } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
-import { EditCardModal, EDIT_CARD_PATH_NAME } from "../components/cards/EditCardModal";
+import {
+  EditCardModal,
+  EDIT_CARD_PATH_NAME,
+} from "../components/cards/EditCardModal";
 import { StudyCard } from "../components/cards/StudyCard";
 import { useCardsQuery } from "../queries/useCardsQuery";
 import { getRandomNumber } from "../utils/getRandomNumber";
@@ -34,6 +25,7 @@ const LOCAL_STORAGE_KEY = "study-card-index";
 
 export const Study: React.FC = () => {
   const [cardIndex, setCardIndex] = useState(0);
+  console.log("oben", cardIndex);
 
   const { data, isLoading } = useCardsQuery();
 
@@ -43,8 +35,10 @@ export const Study: React.FC = () => {
 
   const { path } = useRouteMatch();
 
+  console.log(lastPages);
 
-  const isFirstIndex = cardIndex === 0 && !shuffleActive;
+  const isFirstIndex =
+    cardIndex === 0 || (shuffleActive && !lastPages.current.length);
 
   const lastIndex = data && data.length - 1;
   const currentCard = data && data[cardIndex];
@@ -64,14 +58,21 @@ export const Study: React.FC = () => {
   };
 
   const decrementIndex = () => {
-    if (shuffleActive) {
-      const lastPage = lastPages.current.shift();
-      lastPage && setCardIndex(lastPage);
-    }
+    setCardIndex((currentIndex) => {
+      if (shuffleActive) {
+        const lastPage = lastPages.current.pop();
 
-    if (!isFirstIndex) {
-      setCardIndex((currentIndex) => currentIndex - 1);
-    }
+        if (lastPage) {
+          return lastPage;
+        }
+      }
+
+      if (!isFirstIndex) {
+        return currentIndex - 1;
+      }
+
+      return currentIndex;
+    });
   };
 
   useEffect(() => {
@@ -88,7 +89,7 @@ export const Study: React.FC = () => {
   }, [cardIndex]);
 
   useEffect(() => {
-    data && cardIndex >= data.length && setCardIndex(0);
+    // data && cardIndex >= data.length && setCardIndex(0);
   }, [cardIndex, data]);
 
   const indexModifier: IndexModifier = {
@@ -103,64 +104,50 @@ export const Study: React.FC = () => {
 
   return (
     <>
-    <Route path={`${path}`}>
-      <Flex
-        padding={12}
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-      >
-        {isLoading ? (
-          <Spinner size="xl" />
-        ) : data?.length ? (
-          <Flex flexGrow={1} height="100%" flexDir="column">
-            {/* Settings  */}
-            <Flex mb={2} justifyContent="flex-end">
-              <Button
-                leftIcon={shuffleActive ? <CheckCircleIcon /> : undefined}
-                size="md"
-                variant="outline"
-                onClick={toggleShuffle}
-                isActive={shuffleActive}
-                _active={{ bg: "green" }}
-              >
-                Shuffle
-              </Button>
+      <Route path={`${path}`}>
+        <Flex
+          padding={{
+            base: "2",
+            "2xl": "12",
+          }}
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+        >
+          {isLoading ? (
+            <Spinner size="xl" />
+          ) : data?.length ? (
+            <Flex flexGrow={1} height="100%" flexDir="column">
+              {/* Settings  */}
+              <Flex mb={2} justifyContent="flex-end">
+                <Button
+                  leftIcon={shuffleActive ? <CheckCircleIcon /> : undefined}
+                  size="md"
+                  variant="outline"
+                  onClick={toggleShuffle}
+                  isActive={shuffleActive}
+                  _active={{ bg: "green" }}
+                >
+                  Shuffle
+                </Button>
+              </Flex>
+              {/* Card */}
+              {currentCard && (
+                <StudyCard
+                  card={currentCard}
+                  indexModifier={indexModifier}
+                  key={currentCard._id}
+                />
+              )}
             </Flex>
-            {/* Card */}
-            {currentCard && (
-              <StudyCard
-                card={currentCard}
-                indexModifier={indexModifier}
-                key={currentCard._id}
-              />
-            )}
-          </Flex>
-        ) : (
-          <AlertError msg="No cards found!" />
-        )}
-      </Flex>
-                
-    </Route>
-
-      <Route path={`${path}${EDIT_CARD_PATH_NAME}`}>
-          <EditCardModal />
+          ) : (
+            <AlertError msg="No cards found!" />
+          )}
+        </Flex>
       </Route>
 
-
-      <Route path={`${path}/create`}>
-        <Modal isOpen={true} onClose={() => {}}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Modal Create</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody></ModalBody>
-
-            <ModalFooter>
-              <Button variant="ghost">Secondary Action</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+      <Route path={`${path}${EDIT_CARD_PATH_NAME}`}>
+        <EditCardModal />
       </Route>
     </>
   );

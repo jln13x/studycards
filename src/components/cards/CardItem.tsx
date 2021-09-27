@@ -38,11 +38,11 @@ export const CardItem: React.FC<CardItemProps> = ({ data }) => {
       backgroundColor="blackAlpha.600"
       boxShadow="md"
       flexDirection="column"
-      width="100%"
       justifyContent="space-between"
       rounded={8}
-      height="20vh"
       _hover={{ bg: "blackAlpha.400" }}
+      h="100%"
+      w="100%"
     >
       <Flex
         bgColor="red.900"

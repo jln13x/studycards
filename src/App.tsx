@@ -22,6 +22,7 @@ export const App = () => {
 
       ".markdown-body": {
         color:"#fff",
+        fontSize: "inherit",
 
         "a, blockquote": {
           color: "#ccc" 

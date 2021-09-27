@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useRef } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Link, useLocation, useRouteMatch } from "react-router-dom";
+import { useSwipeable } from "react-swipeable";
 import { Card } from "../../interfaces/Card";
 import { IndexModifier } from "../../pages/Study";
 import { EDIT_CARD_PATH_NAME } from "./EditCardModal";
@@ -29,11 +30,22 @@ export const StudyCard: React.FC<StudyCardProps> = ({
 }) => {
   const { title, question, answer, tags } = card;
 
-  const {pathname: currentLocation} = useLocation();
+  const { pathname: currentLocation } = useLocation();
 
-  const {path: basePath} = useRouteMatch();
-  
-  const StudyCardRef = useRef<HTMLDivElement>(null);
+  const { path: basePath } = useRouteMatch();
+
+  const swipeHandler = useSwipeable({
+    onSwipedLeft: () => {
+      showQuestion();
+      decrement();
+    },
+    onSwipedRight: () => {
+      showQuestion();
+      increment();
+    },
+  });
+
+  const keyboardHandler = useRef<HTMLDivElement | null>(null);
 
   const [
     answerIsShowing,
@@ -69,13 +81,29 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   };
 
   useEffect(() => {
-    currentLocation === basePath && StudyCardRef.current && StudyCardRef.current.focus();
-  }, [answerIsShowing, currentLocation, basePath]);
+    currentLocation === basePath &&
+      keyboardHandler.current &&
+      keyboardHandler.current.focus();
+  }, [keyboardHandler, currentLocation, basePath, card, indexModifier]);
 
 
   return (
-    <HStack spacing={4} height="100%" width="100%">
-      <Flex justifyContent="center">
+    <HStack
+      spacing={{
+        base: 0,
+        lg: 4,
+      }}
+      height="100%"
+      width="100%"
+      ref={keyboardHandler}
+    >
+      <Flex
+        justifyContent="center"
+        display={{
+          base: "none",
+          lg: "block",
+        }}
+      >
         <StudyCardNavigation
           onClick={decrement}
           disabled={isFirstIndex}
@@ -85,8 +113,14 @@ export const StudyCard: React.FC<StudyCardProps> = ({
 
       <Flex
         flexGrow={1}
-        py={4}
-        px={12}
+        py={{
+          base: 2,
+          "2xl": 4,
+        }}
+        px={{
+          base: 4,
+          "2xl": 12,
+        }}
         bgColor="red.800"
         rounded={8}
         justifyContent="center"
@@ -96,7 +130,8 @@ export const StudyCard: React.FC<StudyCardProps> = ({
         onKeyDown={(e) => handleKeyboardAccessibility(e)}
         tabIndex={0}
         _focusVisible={{ outline: "none" }}
-        ref={StudyCardRef}
+        // ref={StudyCardRef}
+        {...swipeHandler}
       >
         <Flex
           alignSelf="flex-start"
@@ -126,7 +161,13 @@ export const StudyCard: React.FC<StudyCardProps> = ({
         )}
       </Flex>
 
-      <Flex justifyContent="center">
+      <Flex
+        justifyContent="center"
+        display={{
+          base: "none",
+          lg: "block",
+        }}
+      >
         <StudyCardNavigation
           onClick={increment}
           disabled={isLastIndex}

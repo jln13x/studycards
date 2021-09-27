@@ -26,7 +26,10 @@ export const Cards: React.FC<{}> = () => {
   return (
     <>
       <Route path={`${path}`}>
-        <Box padding={12}>
+        <Box padding={{
+          base: "2",
+          "2xl": "12"
+        }}>
           <Flex justifyContent="end" mb={4}>
             <Button
               as={Link}
@@ -50,9 +53,21 @@ export const Cards: React.FC<{}> = () => {
             {isError ? <AlertError /> : null}
           </Flex>
 
-          <Grid templateColumns="repeat(4, 25%)" gap={6} maxW="80%" mx="auto">
+          <Grid
+            templateColumns={{
+              md: "1fr",
+              lg: "repeat(2, 1fr)",
+              xl: "repeat(3, 1fr)",
+              "2xl": "repeat(4, 1fr)",
+            }}
+            gap={6}
+          >
             {data &&
-              data.map((card) => <CardItem key={card._id} data={card} />)}
+              data.map((card) => (
+                <Box key={card._id} height="20vh">
+                  <CardItem data={card} />
+                </Box>
+              ))}
           </Grid>
         </Box>
       </Route>

@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import { Flex } from "@chakra-ui/layout";
 import React from "react";
+import { Markdown } from "../Markdown";
 
 interface StudyCardQuestionProps {
   question: string;
@@ -14,15 +15,18 @@ export const StudyCardQuestion: React.FC<StudyCardQuestionProps> = ({
   return (
     <>
       <Flex
-        fontSize="xx-large"
+        fontSize={{
+          base: "large",
+          "2xl": "xx-large",
+        }}
         flexGrow={1}
         w="100%"
         flexDir="column"
         justifyContent="center"
         alignItems="center"
+        textAlign="center"
       >
-        {/* <Markdown markdown={question} /> */}
-        {question}
+        <Markdown markdown={question} />
       </Flex>
 
       <Button textTransform="uppercase" variant="outline" onClick={showAnswer}>
