@@ -1,18 +1,19 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Flex,
   Heading,
   HStack,
   Icon,
-  useBoolean,
+  useBoolean
 } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaRandom } from "react-icons/fa";
 import { Link, useLocation, useRouteMatch } from "react-router-dom";
 import { useSwipeable } from "react-swipeable";
 import { Card } from "../../interfaces/Card";
-import { IndexModifier } from "../../pages/Study";
+import { IndexModifier, ShuffleModifier } from "../../pages/Study";
 import { EDIT_CARD_PATH_NAME } from "./EditCardModal";
 import { StudyCardAnswer } from "./StudyCardAnswer";
 import { StudyCardNavigation } from "./StudyCardNavigation";
@@ -22,11 +23,13 @@ import { Tags } from "./Tag";
 interface StudyCardProps {
   card: Card;
   indexModifier: IndexModifier;
+  shuffleModifier: ShuffleModifier;
 }
 
 export const StudyCard: React.FC<StudyCardProps> = ({
   card,
   indexModifier,
+  shuffleModifier,
 }) => {
   const { title, question, answer, tags } = card;
 
@@ -35,11 +38,11 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   const { path: basePath } = useRouteMatch();
 
   const swipeHandler = useSwipeable({
-    onSwipedLeft: () => {
+    onSwipedRight: () => {
       showQuestion();
       decrement();
     },
-    onSwipedRight: () => {
+    onSwipedLeft: () => {
       showQuestion();
       increment();
     },
@@ -57,6 +60,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
   ] = useBoolean();
 
   const { decrement, increment, isFirstIndex, isLastIndex } = indexModifier;
+  const { shuffleActive, toggleShuffle } = shuffleModifier;
 
   const handleKeyboardAccessibility = (
     e: React.KeyboardEvent<HTMLDivElement>
@@ -86,7 +90,6 @@ export const StudyCard: React.FC<StudyCardProps> = ({
       keyboardHandler.current.focus();
   }, [keyboardHandler, currentLocation, basePath, card, indexModifier]);
 
-
   return (
     <HStack
       spacing={{
@@ -96,6 +99,9 @@ export const StudyCard: React.FC<StudyCardProps> = ({
       height="100%"
       width="100%"
       ref={keyboardHandler}
+      onKeyDown={(e) => handleKeyboardAccessibility(e)}
+      tabIndex={0}
+      _focusVisible={{ outline: "none" }}
     >
       <Flex
         justifyContent="center"
@@ -127,10 +133,6 @@ export const StudyCard: React.FC<StudyCardProps> = ({
         alignItems="center"
         height="100%"
         flexDir="column"
-        onKeyDown={(e) => handleKeyboardAccessibility(e)}
-        tabIndex={0}
-        _focusVisible={{ outline: "none" }}
-        // ref={StudyCardRef}
         {...swipeHandler}
       >
         <Flex
@@ -142,12 +144,26 @@ export const StudyCard: React.FC<StudyCardProps> = ({
             <Heading>{title}</Heading>
             <Tags tags={tags} />
           </Box>
-          <Button
-            as={Link}
-            to={`/study${EDIT_CARD_PATH_NAME.replace(":id", "" + card._id)}`}
-          >
-            <Icon as={FaEdit} />
-          </Button>
+
+          <ButtonGroup>
+            <Button
+              size="md"
+              variant="ghost"
+              onClick={toggleShuffle}
+              isActive={shuffleActive}
+              _hover={{bg: "none"}}
+              _active={{ color: "#20CC82" }}
+              _focus={{ border: "none" }}
+            >
+              <Icon as={FaRandom} />
+            </Button>
+            <Button
+              as={Link}
+              to={`/study${EDIT_CARD_PATH_NAME.replace(":id", "" + card._id)}`}
+            >
+              <Icon as={FaEdit} />
+            </Button>
+          </ButtonGroup>
         </Flex>
 
         {answerIsShowing ? (

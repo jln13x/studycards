@@ -1,38 +1,59 @@
 import { Box, Flex, Grid } from "@chakra-ui/layout";
 import { Button, Icon, Spinner } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { Link, Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
 import { CardItem } from "../components/cards/CardItem";
 import {
   CreateCardModal,
-  CREATE_CARD_PATH_NAME,
+  CREATE_CARD_PATH_NAME
 } from "../components/cards/CreateCardModal";
 import {
   DeleteCardModal,
-  DELETE_CARD_PATH_NAME,
+  DELETE_CARD_PATH_NAME
 } from "../components/cards/DeleteCardModal";
 import {
   EditCardModal,
-  EDIT_CARD_PATH_NAME,
+  EDIT_CARD_PATH_NAME
 } from "../components/cards/EditCardModal";
+import { SearchInput } from "../components/SearchInput";
 import { useCardsQuery } from "../queries/useCardsQuery";
 
 export const Cards: React.FC<{}> = () => {
-  const { data, isLoading, isError } = useCardsQuery();
+  const [value, setValue] = useState("");
+  const [search, setSearch] = useState("");
+  const { data, isLoading, isError } = useCardsQuery(search);
   const { path } = useRouteMatch();
+
+  useEffect(() => {
+    setSearch(value);
+  }, [value]);
+
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   return (
     <>
       <Route path={`${path}`}>
-        <Box padding={{
-          base: "2",
-          "2xl": "12"
-        }}>
-          <Flex justifyContent="end" mb={4}>
+        <Box
+          padding={{
+            base: "2",
+            "2xl": "12",
+          }}
+        >
+          <Flex justifyContent="space-between" mb={4} alignItems="center">
+            <SearchInput
+              onChange={(e) => {
+                timeoutRef.current && clearTimeout(timeoutRef.current);
+                timeoutRef.current = setTimeout(
+                  () => setValue(e.target.value),
+                  200
+                );
+              }}
+            />
             <Button
               as={Link}
+              variant="link"
               to={`${path}${CREATE_CARD_PATH_NAME}`}
               size="lg"
               bg="none"
@@ -42,6 +63,9 @@ export const Cards: React.FC<{}> = () => {
                 color: "red.400",
                 transform: "scale(1.25)",
                 transition: "transform 0.125s ease-in",
+              }}
+              _focus={{
+                outline: "none"
               }}
             >
               <Icon as={FaPlusCircle} fontSize="xx-large" />
@@ -60,7 +84,10 @@ export const Cards: React.FC<{}> = () => {
               xl: "repeat(3, 1fr)",
               "2xl": "repeat(4, 1fr)",
             }}
-            gap={6}
+            gap={{
+            base: 2,
+            lg: 6,
+            }}
           >
             {data &&
               data.map((card) => (

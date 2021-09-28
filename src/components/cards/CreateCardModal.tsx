@@ -1,10 +1,17 @@
-import { Button, Checkbox, VStack } from "@chakra-ui/react";
+import {
+  Badge,
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  VStack
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { CreateCardModel } from "../../interfaces/Card";
 import { useCreateCardMutation } from "../../mutations/useCreateCardMutation";
 import { toErrorMap } from "../../utils/toErrorMap";
+import { AlertSuccess } from "../Alert";
 import { CustomModal } from "../CustomModal";
 import { InputField } from "../InputField";
 import { MarkdownTextareaField } from "../MarkdownTextareaField";
@@ -16,6 +23,7 @@ export const CreateCardModal: React.FC = () => {
   const history = useHistory();
 
   const [keepOpen, setKeepOpen] = useState(false);
+  const [resetFormOnCreate, setResetFormOnCreate] = useState(false);
 
   const initialValues = {
     title: "",
@@ -26,8 +34,9 @@ export const CreateCardModal: React.FC = () => {
 
   return (
     <Formik
+      initialStatus={{}}
       initialValues={initialValues}
-      onSubmit={async (values, { setErrors, resetForm }) => {
+      onSubmit={async (values, { setErrors, resetForm, setStatus }) => {
         if (typeof values.tags === "string") {
           //@ts-ignore
           values.tags = values.tags.split(",");
@@ -40,29 +49,49 @@ export const CreateCardModal: React.FC = () => {
         if (errors) {
           const err = toErrorMap(errors);
           setErrors(err);
+          return;
         } else {
-          if (keepOpen) {
-            resetForm();
-          } else {
-            resetForm();
-            history.push("/cards");
-          }
+          resetFormOnCreate && resetForm();
+          keepOpen || history.push("/cards");
         }
+
+        setStatus({
+          success: {
+            data: values,
+          },
+        });
       }}
     >
-      {({ isSubmitting, handleReset, handleSubmit, ...props }) => (
+      {({
+        isSubmitting,
+        handleReset,
+        handleSubmit,
+        status,
+        touched,
+        dirty,
+        ...props
+      }) => (
         <Form>
           <CustomModal
             title="Create card"
             size="6xl"
             footer={
               <>
-                <Checkbox
-                  checked={keepOpen}
-                  onChange={(e) => setKeepOpen(e.target.checked)}
-                >
-                  Keep open
-                </Checkbox>
+                <CheckboxGroup>
+                  <Checkbox
+                    checked={resetFormOnCreate}
+                    onChange={(e) => setResetFormOnCreate(e.target.checked)}
+                    mr={2}
+                  >
+                    Reset on create
+                  </Checkbox>
+                  <Checkbox
+                    checked={keepOpen}
+                    onChange={(e) => setKeepOpen(e.target.checked)}
+                  >
+                    Keep open
+                  </Checkbox>
+                </CheckboxGroup>
                 <Button
                   type="submit"
                   isLoading={isSubmitting}
@@ -76,6 +105,12 @@ export const CreateCardModal: React.FC = () => {
             wrapper={Form}
           >
             <VStack spacing={4}>
+              {status && status.success && (
+                <AlertSuccess>
+                  The card <Badge>{status.success?.data?.title}</Badge> was
+                  created!
+                </AlertSuccess>
+              )}
               <InputField
                 name="title"
                 placeholder="Enter title..."

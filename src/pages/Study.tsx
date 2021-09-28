@@ -1,11 +1,10 @@
-import { CheckCircleIcon } from "@chakra-ui/icons";
-import { Button, Flex, Spinner, useBoolean } from "@chakra-ui/react";
+import { Flex, Spinner, useBoolean } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
 import {
   EditCardModal,
-  EDIT_CARD_PATH_NAME,
+  EDIT_CARD_PATH_NAME
 } from "../components/cards/EditCardModal";
 import { StudyCard } from "../components/cards/StudyCard";
 import { useCardsQuery } from "../queries/useCardsQuery";
@@ -21,11 +20,15 @@ export interface IndexModifier {
   setCardIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
+export interface ShuffleModifier {
+  shuffleActive: boolean,
+  toggleShuffle: () => void,
+}
+
 const LOCAL_STORAGE_KEY = "study-card-index";
 
 export const Study: React.FC = () => {
   const [cardIndex, setCardIndex] = useState(0);
-  console.log("oben", cardIndex);
 
   const { data, isLoading } = useCardsQuery();
 
@@ -34,8 +37,6 @@ export const Study: React.FC = () => {
   const [shuffleActive, { toggle: toggleShuffle }] = useBoolean();
 
   const { path } = useRouteMatch();
-
-  console.log(lastPages);
 
   const isFirstIndex =
     cardIndex === 0 || (shuffleActive && !lastPages.current.length);
@@ -46,33 +47,27 @@ export const Study: React.FC = () => {
 
   const incrementIndex = () => {
     if (shuffleActive) {
-      lastIndex && setCardIndex(getRandomNumber(lastIndex));
       lastPages.current.push(cardIndex);
+      lastIndex && setCardIndex(getRandomNumber(lastIndex));
       return;
     }
 
     if (!isLastIndex) {
       setCardIndex((currentIndex) => currentIndex + 1);
-      lastPages.current.push(cardIndex);
     }
   };
 
   const decrementIndex = () => {
-    setCardIndex((currentIndex) => {
-      if (shuffleActive) {
-        const lastPage = lastPages.current.pop();
+    if (shuffleActive) {
+      const lastPage = lastPages.current.pop();
+      if (lastPage !== undefined) setCardIndex(lastPage);
+      return;
+    }
 
-        if (lastPage) {
-          return lastPage;
-        }
-      }
+    if (!isFirstIndex) {
+      setCardIndex((currentCardIndex) => currentCardIndex - 1);
+    }
 
-      if (!isFirstIndex) {
-        return currentIndex - 1;
-      }
-
-      return currentIndex;
-    });
   };
 
   useEffect(() => {
@@ -92,6 +87,10 @@ export const Study: React.FC = () => {
     // data && cardIndex >= data.length && setCardIndex(0);
   }, [cardIndex, data]);
 
+  useEffect(() => {
+    console.log(lastPages.current);
+  }, [lastPages]);
+
   const indexModifier: IndexModifier = {
     current: cardIndex,
     last: lastIndex,
@@ -100,6 +99,11 @@ export const Study: React.FC = () => {
     increment: incrementIndex,
     decrement: decrementIndex,
     setCardIndex,
+  };
+
+  const shuffleModifier: ShuffleModifier = {
+    shuffleActive,
+    toggleShuffle
   };
 
   return (
@@ -119,23 +123,15 @@ export const Study: React.FC = () => {
           ) : data?.length ? (
             <Flex flexGrow={1} height="100%" flexDir="column">
               {/* Settings  */}
-              <Flex mb={2} justifyContent="flex-end">
-                <Button
-                  leftIcon={shuffleActive ? <CheckCircleIcon /> : undefined}
-                  size="md"
-                  variant="outline"
-                  onClick={toggleShuffle}
-                  isActive={shuffleActive}
-                  _active={{ bg: "green" }}
-                >
-                  Shuffle
-                </Button>
+              <Flex mb={2} justifyContent="center">
+
               </Flex>
               {/* Card */}
               {currentCard && (
                 <StudyCard
                   card={currentCard}
                   indexModifier={indexModifier}
+                  shuffleModifier={shuffleModifier}
                   key={currentCard._id}
                 />
               )}
