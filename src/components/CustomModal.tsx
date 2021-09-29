@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  ThemeTypings
+  ThemeTypings,
 } from "@chakra-ui/react";
 import React from "react";
 import { useHistory } from "react-router";
@@ -29,21 +29,21 @@ export const CustomModal: React.FC<CustomModalProps> = ({
   wrapper,
 }) => {
   const { goBack } = useHistory();
-  const Wrapper = wrapper || Box
+  const Wrapper = wrapper || Box;
 
   return (
-      <Modal isOpen={true} size={size} onClose={goBack} > 
-        <Wrapper>
-          <ModalOverlay />
-          <ModalContent bgColor="#333">
-            <ModalHeader>
-              <Heading textTransform="uppercase">{title}</Heading>
-              <ModalCloseButton/>
-            </ModalHeader>
-            <ModalBody>{children}</ModalBody>
-            <ModalFooter>{footer}</ModalFooter>
-          </ModalContent>
-        </Wrapper>
-      </Modal>
+    <Modal isOpen={true} size={size} onClose={goBack}>
+      <Wrapper>
+        <ModalOverlay />
+        <ModalContent bgColor="#333">
+          <ModalHeader>
+            <Heading textTransform="uppercase">{title}</Heading>
+            <ModalCloseButton />
+          </ModalHeader>
+          <ModalBody>{children}</ModalBody>
+          <ModalFooter>{footer}</ModalFooter>
+        </ModalContent>
+      </Wrapper>
+    </Modal>
   );
 };

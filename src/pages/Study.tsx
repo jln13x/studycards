@@ -4,7 +4,7 @@ import { Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
 import {
   EditCardModal,
-  EDIT_CARD_PATH_NAME
+  EDIT_CARD_PATH_NAME,
 } from "../components/cards/EditCardModal";
 import { StudyCard } from "../components/cards/StudyCard";
 import { useCardsQuery } from "../queries/useCardsQuery";
@@ -21,8 +21,8 @@ export interface IndexModifier {
 }
 
 export interface ShuffleModifier {
-  shuffleActive: boolean,
-  toggleShuffle: () => void,
+  shuffleActive: boolean;
+  toggleShuffle: () => void;
 }
 
 const LOCAL_STORAGE_KEY = "study-card-index";
@@ -67,7 +67,6 @@ export const Study: React.FC = () => {
     if (!isFirstIndex) {
       setCardIndex((currentCardIndex) => currentCardIndex - 1);
     }
-
   };
 
   useEffect(() => {
@@ -103,7 +102,7 @@ export const Study: React.FC = () => {
 
   const shuffleModifier: ShuffleModifier = {
     shuffleActive,
-    toggleShuffle
+    toggleShuffle,
   };
 
   return (
@@ -123,9 +122,7 @@ export const Study: React.FC = () => {
           ) : data?.length ? (
             <Flex flexGrow={1} height="100%" flexDir="column">
               {/* Settings  */}
-              <Flex mb={2} justifyContent="center">
-
-              </Flex>
+              <Flex mb={2} justifyContent="center"></Flex>
               {/* Card */}
               {currentCard && (
                 <StudyCard

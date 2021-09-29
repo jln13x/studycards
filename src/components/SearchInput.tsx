@@ -22,7 +22,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({ onChange }) => {
           },
         }}
         _focus={{
-          borderColor: "red.800"
+          borderColor: "red.800",
         }}
         transition={"all 0.25s ease-in-out"}
       />

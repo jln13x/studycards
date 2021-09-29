@@ -8,15 +8,16 @@ import { useCardQuery } from "../../queries/useCardQuery";
 import { reverseTransform } from "../../utils/prepareTags";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { CustomModal } from "../CustomModal";
+import { ImageUploadField } from "../ImageUploadField";
 import { InputField } from "../InputField";
 import { MarkdownTextareaField } from "../MarkdownTextareaField";
 
 interface EditCardModalProps {
-  basePath?: string
+  basePath?: string;
 }
 
 interface EditCardParams {
-  id: string
+  id: string;
 }
 
 export const EDIT_CARD_PATH_NAME = "/:id/edit";
@@ -43,37 +44,38 @@ export const EditCardModal: React.FC<EditCardModalProps> = ({ basePath }) => {
     );
   }
 
-  const {title, question, answer, tags, _id} = data;
+  const { title, question, answer, tags, images, _id } = data;
 
-    const initialValues = {
+  const initialValues = {
     title: title,
     question: question,
     answer: answer,
     tags: reverseTransform(tags),
+    images: images || [],
   } as CreateCardModel & {
     tags: string;
   };
 
   return (
     <Formik
-    initialValues={initialValues}
-    onSubmit={async (values, { setErrors }) => {
-      if (typeof values.tags === "string") {
+      initialValues={initialValues}
+      onSubmit={async (values, { setErrors }) => {
+        if (typeof values.tags === "string") {
+          //@ts-ignore
+          values.tags = values.tags.split(",");
+        }
+
+        // FIXME
         //@ts-ignore
-        values.tags = values.tags.split(",");
-      }
+        const { errors } = await mutateAsync({ ...values, _id });
 
-      // FIXME
-      //@ts-ignore
-      const { errors } = await mutateAsync({...values, _id});
-
-      if (errors) {
-        const err = toErrorMap(errors);
-        setErrors(err);
-      }
-    }}
-  >
-      {({ isSubmitting, handleReset, handleSubmit, ...props }) => (
+        if (errors) {
+          const err = toErrorMap(errors);
+          setErrors(err);
+        }
+      }}
+    >
+      {({ isSubmitting, handleReset, handleSubmit, values, ...props }) => (
         <CustomModal
           title="Edit card"
           size="6xl"
@@ -102,6 +104,8 @@ export const EditCardModal: React.FC<EditCardModalProps> = ({ basePath }) => {
               placeholder="Enter answer..."
               label="Answer"
             />
+
+            <ImageUploadField data={values.images} />
 
             <InputField name="tags" placeholder="Enter tags..." label="Tags" />
           </VStack>

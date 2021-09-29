@@ -50,7 +50,7 @@ export const CardItem: React.FC<CardItemProps> = ({ data }) => {
         boxShadow="xl"
         justifyContent="space-between"
         alignItems="center"
-      > 
+      >
         <Text>{title}</Text>
         <Box>
           <ButtonGroup size="xs" bgColor="none">

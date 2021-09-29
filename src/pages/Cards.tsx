@@ -7,23 +7,23 @@ import { AlertError } from "../components/Alert";
 import { CardItem } from "../components/cards/CardItem";
 import {
   CreateCardModal,
-  CREATE_CARD_PATH_NAME
+  CREATE_CARD_PATH_NAME,
 } from "../components/cards/CreateCardModal";
 import {
   DeleteCardModal,
-  DELETE_CARD_PATH_NAME
+  DELETE_CARD_PATH_NAME,
 } from "../components/cards/DeleteCardModal";
 import {
   EditCardModal,
-  EDIT_CARD_PATH_NAME
+  EDIT_CARD_PATH_NAME,
 } from "../components/cards/EditCardModal";
 import { SearchInput } from "../components/SearchInput";
 import { useCardsQuery } from "../queries/useCardsQuery";
 
-export const Cards: React.FC<{}> = () => {
+export const Cards: React.FC = () => {
   const [value, setValue] = useState("");
   const [search, setSearch] = useState("");
-  const { data, isLoading, isError } = useCardsQuery(search);
+  const { data, isLoading, isError, isPlaceholderData } = useCardsQuery(search);
   const { path } = useRouteMatch();
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const Cards: React.FC<{}> = () => {
                 transition: "transform 0.125s ease-in",
               }}
               _focus={{
-                outline: "none"
+                outline: "none",
               }}
             >
               <Icon as={FaPlusCircle} fontSize="xx-large" />
@@ -85,8 +85,8 @@ export const Cards: React.FC<{}> = () => {
               "2xl": "repeat(4, 1fr)",
             }}
             gap={{
-            base: 2,
-            lg: 6,
+              base: 2,
+              lg: 6,
             }}
           >
             {data &&

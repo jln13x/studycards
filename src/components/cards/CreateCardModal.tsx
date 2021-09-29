@@ -3,7 +3,7 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -13,6 +13,7 @@ import { useCreateCardMutation } from "../../mutations/useCreateCardMutation";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { AlertSuccess } from "../Alert";
 import { CustomModal } from "../CustomModal";
+import { ImageUploadField } from "../ImageUploadField";
 import { InputField } from "../InputField";
 import { MarkdownTextareaField } from "../MarkdownTextareaField";
 
@@ -30,6 +31,7 @@ export const CreateCardModal: React.FC = () => {
     question: "",
     answer: "",
     tags: [],
+    images: [],
   } as CreateCardModel;
 
   return (
@@ -41,6 +43,8 @@ export const CreateCardModal: React.FC = () => {
           //@ts-ignore
           values.tags = values.tags.split(",");
         }
+
+        console.log(values);
 
         // FIXME
         //@ts-ignore
@@ -69,6 +73,8 @@ export const CreateCardModal: React.FC = () => {
         status,
         touched,
         dirty,
+        values,
+
         ...props
       }) => (
         <Form>
@@ -131,6 +137,8 @@ export const CreateCardModal: React.FC = () => {
                 label="Answer"
                 tabIndex={3}
               />
+
+              <ImageUploadField data={values.images} />
 
               <InputField
                 name="tags"

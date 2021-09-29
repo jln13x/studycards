@@ -21,11 +21,11 @@ export const App = () => {
       },
 
       ".markdown-body": {
-        color:"#fff",
+        color: "#fff",
         fontSize: "inherit",
 
         "a, blockquote": {
-          color: "#ccc" 
+          color: "#ccc",
         },
         p: {
           // "pre-wrap",
@@ -39,8 +39,8 @@ export const App = () => {
         "pre, code": {
           backgroundColor: "#333",
           wordWrap: "break-word",
-          my: "8"
-        }
+          my: "8",
+        },
       },
     }),
   };

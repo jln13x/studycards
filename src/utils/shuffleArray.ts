@@ -1,4 +1,4 @@
-export const shuffleArray = (array: any[]) => {
+export const shuffleArray = <T>(array: T[]): T[] => {
   let lastIndex = array.length - 1;
 
   while (lastIndex !== 0) {

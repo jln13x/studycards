@@ -28,8 +28,12 @@ export const StudyCardQuestion: React.FC<StudyCardQuestionProps> = ({
       >
         <Markdown markdown={question} />
       </Flex>
-
-      <Button textTransform="uppercase" variant="outline" onClick={showAnswer}>
+      <Button
+        textTransform="uppercase"
+        variant="outline"
+        onClick={showAnswer}
+        minH="5%"
+      >
         Show answer
       </Button>
     </>

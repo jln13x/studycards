@@ -6,7 +6,7 @@ import {
   Heading,
   HStack,
   Icon,
-  useBoolean
+  useBoolean,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { FaEdit, FaRandom } from "react-icons/fa";
@@ -90,6 +90,8 @@ export const StudyCard: React.FC<StudyCardProps> = ({
       keyboardHandler.current.focus();
   }, [keyboardHandler, currentLocation, basePath, card, indexModifier]);
 
+  const { _id, images } = card;
+
   return (
     <HStack
       spacing={{
@@ -151,7 +153,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
               variant="ghost"
               onClick={toggleShuffle}
               isActive={shuffleActive}
-              _hover={{bg: "none"}}
+              _hover={{ bg: "none" }}
               _active={{ color: "#20CC82" }}
               _focus={{ border: "none" }}
             >
@@ -159,7 +161,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
             </Button>
             <Button
               as={Link}
-              to={`/study${EDIT_CARD_PATH_NAME.replace(":id", "" + card._id)}`}
+              to={`/study${EDIT_CARD_PATH_NAME.replace(":id", "" + _id)}`}
             >
               <Icon as={FaEdit} />
             </Button>
@@ -168,7 +170,11 @@ export const StudyCard: React.FC<StudyCardProps> = ({
 
         {answerIsShowing ? (
           <>
-            <StudyCardAnswer answer={answer} showQuestion={showQuestion} />
+            <StudyCardAnswer
+              answer={answer}
+              showQuestion={showQuestion}
+              images={images}
+            />
           </>
         ) : (
           <>

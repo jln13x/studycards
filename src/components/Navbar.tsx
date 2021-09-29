@@ -1,14 +1,14 @@
 import { Icon, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { NavLink as RouterLink, useLocation } from "react-router-dom";
-import { FaBook, FaColumns} from "react-icons/fa";
+import { FaBook, FaColumns } from "react-icons/fa";
 
 interface NavbarProps {}
 
 export const Navbar: React.FC<NavbarProps> = () => {
   return (
     <Flex height="100%">
-      <NavItem path="/cards" name="Cards" icon={FaColumns}/>
+      <NavItem path="/cards" name="Cards" icon={FaColumns} />
       <NavItem path="/study" name="Study" icon={FaBook} />
     </Flex>
   );
@@ -17,7 +17,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
 interface NavItemProps {
   path: string;
   name: string;
-  icon?: any
+  icon?: any;
 }
 
 const NavItem: React.FC<NavItemProps> = ({ path, name, icon }) => {
@@ -38,7 +38,7 @@ const NavItem: React.FC<NavItemProps> = ({ path, name, icon }) => {
       as={RouterLink}
       to={path}
     >
-      {icon && <Icon as={icon}  mr={2} height="100%" w={4}/>}
+      {icon && <Icon as={icon} mr={2} height="100%" w={4} />}
       <Text
         textDecoration="none"
         textTransform="uppercase"
