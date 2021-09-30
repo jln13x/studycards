@@ -2,7 +2,7 @@ import { preConfiguredAxios as axios } from "../utils/preconfiguredAxios";
 import { useQuery, UseQueryResult } from "react-query";
 import { Card } from "../interfaces/Card";
 
-export const CARDS_QUERY_KEY = "cards";
+export const CARDS_QUERY_KEY = "cards/study";
 const QUERY_PATH = "/cards";
 
 export const useCardsQuery = <TData = Card>(
@@ -12,7 +12,7 @@ export const useCardsQuery = <TData = Card>(
     queryFn: async () => {
       const response = await axios.get(QUERY_PATH, {
         params: {
-          search: search,
+          search,
         },
       });
       return response.data;

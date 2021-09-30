@@ -10,15 +10,17 @@ interface AlertErrorProps {
   msg?: string;
 }
 
-const DEFAULT_ERROR_MESSAGE = "Es ist ein Fehler aufgetreten!";
+const DEFAULT_ERROR_MESSAGE = "An error occured!";
 const DEFAULT_SUCCESS_MESSAGE = "Success!";
 
 export const AlertError: React.FC<AlertErrorProps> = ({
   msg = DEFAULT_ERROR_MESSAGE,
+  children
 }) => (
   <Alert status="error" rounded={4}>
     <AlertIcon />
     <AlertTitle mr={2}>{msg}</AlertTitle>
+    <AlertDescription>{children}</AlertDescription>
   </Alert>
 );
 

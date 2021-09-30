@@ -1,7 +1,7 @@
 import { Box, Flex, Grid } from "@chakra-ui/layout";
-import { Button, Icon, Spinner } from "@chakra-ui/react";
+import { Button, Icon, Progress, Spinner } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaCircleNotch, FaIceCream, FaPlusCircle, FaSpinner } from "react-icons/fa";
 import { Link, Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
 import { CardItem } from "../components/cards/CardItem";
@@ -17,13 +17,23 @@ import {
   EditCardModal,
   EDIT_CARD_PATH_NAME,
 } from "../components/cards/EditCardModal";
+import { LoadMore } from "../components/LoadMore";
 import { SearchInput } from "../components/SearchInput";
-import { useCardsQuery } from "../queries/useCardsQuery";
+import { useInfiniteCardsQuery } from "../queries/useInfiniteCardsQuery";
 
 export const Cards: React.FC = () => {
   const [value, setValue] = useState("");
   const [search, setSearch] = useState("");
-  const { data, isLoading, isError, isPlaceholderData } = useCardsQuery(search);
+  const {
+    data: queryData,
+    isLoading,
+    isError,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    ...props
+  } = useInfiniteCardsQuery(search);
+
   const { path } = useRouteMatch();
 
   useEffect(() => {
@@ -89,13 +99,23 @@ export const Cards: React.FC = () => {
               lg: 6,
             }}
           >
-            {data &&
-              data.map((card) => (
+            {queryData?.pages.map((page) => {
+              return page.data.map((card) => (
                 <Box key={card._id} height="20vh">
                   <CardItem data={card} />
                 </Box>
-              ))}
+              ));
+            })}
           </Grid>
+
+          {hasNextPage && (
+            <Flex mt={4} w="100%" justifyContent="center" flexDir="column">
+              {isFetchingNextPage && (
+                <Spinner size="xl" speed="1.5s" thickness="0" as={FaSpinner} colorScheme="red" my={8} alignSelf="center"/>
+              )}
+              <LoadMore loading={false} onClick={fetchNextPage} />
+            </Flex>
+          )}
         </Box>
       </Route>
 

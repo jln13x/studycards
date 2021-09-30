@@ -8,9 +8,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaEye, FaEyeSlash, FaTrash } from "react-icons/fa";
 import { Link, useRouteMatch } from "react-router-dom";
 import { Card } from "../../interfaces/Card";
+import { useDisableCardMutation } from "../../mutations/useDisableCardMutation";
 import setPathParameters from "../../utils/setPathParameters";
 import { Markdown } from "../Markdown";
 import { DELETE_CARD_PATH_NAME } from "./DeleteCardModal";
@@ -22,8 +23,19 @@ interface CardItemProps {
 }
 
 export const CardItem: React.FC<CardItemProps> = ({ data }) => {
-  const { title, question, tags, _id } = data;
+  const { title, question, tags, isDisabled, _id } = data;
   const { path } = useRouteMatch();
+
+  const { mutate, isLoading: disableMutationIsLoading } = useDisableCardMutation();
+
+  const toggleDisabled = () => {
+    mutate({
+      _id,
+      payload: {
+        isDisabled: !isDisabled,
+      },
+    });
+  };
 
   const EDIT_CARD_PATH_WITH_ID = setPathParameters(EDIT_CARD_PATH_NAME, {
     id: _id,
@@ -54,6 +66,19 @@ export const CardItem: React.FC<CardItemProps> = ({ data }) => {
         <Text>{title}</Text>
         <Box>
           <ButtonGroup size="xs" bgColor="none">
+            <Button
+              variant="link"
+              _focus={{ outline: "none" }}
+              onClick={toggleDisabled}
+              isLoading={disableMutationIsLoading}
+            >
+              {isDisabled ? (
+                <Icon as={FaEyeSlash} color="orange.400" />
+              ) : (
+                <Icon as={FaEye} color="green.400" />
+              )}
+            </Button>
+
             <Button as={Link} to={`${path}${EDIT_CARD_PATH_WITH_ID}`}>
               <Icon as={FaEdit} />
             </Button>

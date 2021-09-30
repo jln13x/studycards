@@ -1,4 +1,4 @@
-import { Flex, Spinner, useBoolean } from "@chakra-ui/react";
+import { Button, Flex, Spinner, useBoolean } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
@@ -43,6 +43,7 @@ export const Study: React.FC = () => {
 
   const lastIndex = data && data.length - 1;
   const currentCard = data && data[cardIndex];
+
   const isLastIndex = cardIndex === lastIndex && !shuffleActive;
 
   const incrementIndex = () => {
@@ -79,16 +80,13 @@ export const Study: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, "" + cardIndex);
+    localStorage.setItem(LOCAL_STORAGE_KEY, `${cardIndex}`);
   }, [cardIndex]);
 
-  useEffect(() => {
-    // data && cardIndex >= data.length && setCardIndex(0);
-  }, [cardIndex, data]);
-
-  useEffect(() => {
-    console.log(lastPages.current);
-  }, [lastPages]);
+  const reset = () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    setCardIndex(0);
+  }
 
   const indexModifier: IndexModifier = {
     current: cardIndex,
@@ -124,13 +122,17 @@ export const Study: React.FC = () => {
               {/* Settings  */}
               <Flex mb={2} justifyContent="center"></Flex>
               {/* Card */}
-              {currentCard && (
+              {currentCard ? (
                 <StudyCard
                   card={currentCard}
                   indexModifier={indexModifier}
                   shuffleModifier={shuffleModifier}
                   key={currentCard._id}
                 />
+              ) : (
+                <AlertError>
+                  <Button colorSchema="red" onClick={reset}>Reset?</Button>
+                </AlertError>
               )}
             </Flex>
           ) : (

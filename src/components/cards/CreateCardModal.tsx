@@ -44,8 +44,6 @@ export const CreateCardModal: React.FC = () => {
           values.tags = values.tags.split(",");
         }
 
-        console.log(values);
-
         // FIXME
         //@ts-ignore
         const { errors } = await mutateAsync(values);
