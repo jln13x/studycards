@@ -15,7 +15,7 @@ const DEFAULT_SUCCESS_MESSAGE = "Success!";
 
 export const AlertError: React.FC<AlertErrorProps> = ({
   msg = DEFAULT_ERROR_MESSAGE,
-  children
+  children,
 }) => (
   <Alert status="error" rounded={4}>
     <AlertIcon />

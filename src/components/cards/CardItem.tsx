@@ -26,7 +26,8 @@ export const CardItem: React.FC<CardItemProps> = ({ data }) => {
   const { title, question, tags, isDisabled, _id } = data;
   const { path } = useRouteMatch();
 
-  const { mutate, isLoading: disableMutationIsLoading } = useDisableCardMutation();
+  const { mutate, isLoading: disableMutationIsLoading } =
+    useDisableCardMutation();
 
   const toggleDisabled = () => {
     mutate({

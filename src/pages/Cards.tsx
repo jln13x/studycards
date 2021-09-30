@@ -1,7 +1,12 @@
 import { Box, Flex, Grid } from "@chakra-ui/layout";
 import { Button, Icon, Progress, Spinner } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import { FaCircleNotch, FaIceCream, FaPlusCircle, FaSpinner } from "react-icons/fa";
+import {
+  FaCircleNotch,
+  FaIceCream,
+  FaPlusCircle,
+  FaSpinner,
+} from "react-icons/fa";
 import { Link, Route, useRouteMatch } from "react-router-dom";
 import { AlertError } from "../components/Alert";
 import { CardItem } from "../components/cards/CardItem";
@@ -111,7 +116,15 @@ export const Cards: React.FC = () => {
           {hasNextPage && (
             <Flex mt={4} w="100%" justifyContent="center" flexDir="column">
               {isFetchingNextPage && (
-                <Spinner size="xl" speed="1.5s" thickness="0" as={FaSpinner} colorScheme="red" my={8} alignSelf="center"/>
+                <Spinner
+                  size="xl"
+                  speed="1.5s"
+                  thickness="0"
+                  as={FaSpinner}
+                  colorScheme="red"
+                  my={8}
+                  alignSelf="center"
+                />
               )}
               <LoadMore loading={false} onClick={fetchNextPage} />
             </Flex>

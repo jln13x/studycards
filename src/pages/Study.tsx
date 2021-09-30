@@ -86,7 +86,7 @@ export const Study: React.FC = () => {
   const reset = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     setCardIndex(0);
-  }
+  };
 
   const indexModifier: IndexModifier = {
     current: cardIndex,
@@ -131,7 +131,9 @@ export const Study: React.FC = () => {
                 />
               ) : (
                 <AlertError>
-                  <Button colorSchema="red" onClick={reset}>Reset?</Button>
+                  <Button colorSchema="red" onClick={reset}>
+                    Reset?
+                  </Button>
                 </AlertError>
               )}
             </Flex>
