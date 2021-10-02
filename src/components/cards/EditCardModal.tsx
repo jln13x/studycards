@@ -11,7 +11,7 @@ import { CustomModal } from "../CustomModal";
 import { ImageUploadField } from "../ImageUploadField";
 import { InputField } from "../InputField";
 import { MarkdownTextareaField } from "../MarkdownTextareaField";
-import {useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 interface EditCardParams {
   id: string;
@@ -22,7 +22,7 @@ export const EDIT_CARD_PATH_NAME = "/:id/edit";
 export const EditCardModal: React.FC = () => {
   const params = useParams<EditCardParams>();
   const { data, isLoading } = useCardQuery(params.id);
-  const {goBack} = useHistory();
+  const { goBack } = useHistory();
 
   const { mutateAsync } = useEditCardMutation();
 
