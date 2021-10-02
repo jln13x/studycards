@@ -2,7 +2,7 @@ import { useInfiniteQuery, UseInfiniteQueryResult } from "react-query";
 import { Card } from "../interfaces/Card";
 import { preConfiguredAxios as axios } from "../utils/preconfiguredAxios";
 
-export const CARDS_QUERY_KEY = "cards";
+export const INFINITE_CARDS_QUERY_KEY = "cards";
 const QUERY_PATH = "/cards/overview";
 
 interface InfinteCardsMetaData {
@@ -21,7 +21,7 @@ export const useInfiniteCardsQuery = (
   search = ""
 ): UseInfiniteQueryResult<InfiniteCardsData> => {
   return useInfiniteQuery<InfiniteCardsData>(
-    [CARDS_QUERY_KEY, search],
+    [INFINITE_CARDS_QUERY_KEY, search],
     async ({ pageParam: page = 0 }) => {
       const response = await axios.get("/cards/overview", {
         params: {

@@ -11,10 +11,7 @@ import { CustomModal } from "../CustomModal";
 import { ImageUploadField } from "../ImageUploadField";
 import { InputField } from "../InputField";
 import { MarkdownTextareaField } from "../MarkdownTextareaField";
-
-interface EditCardModalProps {
-  basePath?: string;
-}
+import {useHistory} from 'react-router-dom';
 
 interface EditCardParams {
   id: string;
@@ -22,9 +19,10 @@ interface EditCardParams {
 
 export const EDIT_CARD_PATH_NAME = "/:id/edit";
 
-export const EditCardModal: React.FC<EditCardModalProps> = ({ basePath }) => {
+export const EditCardModal: React.FC = () => {
   const params = useParams<EditCardParams>();
   const { data, isLoading } = useCardQuery(params.id);
+  const {goBack} = useHistory();
 
   const { mutateAsync } = useEditCardMutation();
 
@@ -47,9 +45,9 @@ export const EditCardModal: React.FC<EditCardModalProps> = ({ basePath }) => {
   const { title, question, answer, tags, images, _id } = data;
 
   const initialValues = {
-    title: title,
-    question: question,
-    answer: answer,
+    title,
+    question,
+    answer,
     tags: reverseTransform(tags),
     images: images || [],
   } as CreateCardModel & {
@@ -72,10 +70,12 @@ export const EditCardModal: React.FC<EditCardModalProps> = ({ basePath }) => {
         if (errors) {
           const err = toErrorMap(errors);
           setErrors(err);
+        } else {
+          goBack();
         }
       }}
     >
-      {({ isSubmitting, handleReset, handleSubmit, values, ...props }) => (
+      {({ isSubmitting, values }) => (
         <CustomModal
           title="Edit card"
           size="6xl"

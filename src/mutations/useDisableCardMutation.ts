@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
-import { CARDS_QUERY_KEY } from "../queries/useInfiniteCardsQuery";
+import { CARDS_QUERY_KEY } from "../queries/useCardsQuery";
+import { INFINITE_CARDS_QUERY_KEY } from "../queries/useInfiniteCardsQuery";
 import { preConfiguredAxios as axios } from "../utils/preconfiguredAxios";
 import setPathParameters from "../utils/setPathParameters";
 
@@ -21,6 +22,7 @@ export const useDisableCardMutation = () => {
       const { _id, payload } = data;
 
       await axios.post(setPathParameters(MUTATION_PATH, { id: _id }), payload);
+      queryClient.invalidateQueries(INFINITE_CARDS_QUERY_KEY);
       queryClient.invalidateQueries(CARDS_QUERY_KEY);
     },
   });

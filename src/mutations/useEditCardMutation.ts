@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { Card } from "../interfaces/Card";
 import { CARDS_QUERY_KEY } from "../queries/useCardsQuery";
 import { CARD_QUERY_KEY } from "../queries/useCardQuery";
+import { INFINITE_CARDS_QUERY_KEY } from "../queries/useInfiniteCardsQuery";
 
 const MUTATION_KEY = "cards/edit";
 const MUTATION_PATH = "/cards/";
@@ -14,6 +15,7 @@ export const useEditCardMutation = () => {
     mutationFn: async (data) => {
       const response = await axios.patch(MUTATION_PATH + data._id, data);
       queryClient.invalidateQueries(CARDS_QUERY_KEY);
+      queryClient.invalidateQueries(INFINITE_CARDS_QUERY_KEY);
       queryClient.invalidateQueries(CARD_QUERY_KEY + data._id);
       return response.data;
     },
