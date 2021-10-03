@@ -32,7 +32,12 @@ export const CustomModal: React.FC<CustomModalProps> = ({
   const Wrapper = wrapper || Box;
 
   return (
-    <Modal isOpen={true} size={size} onClose={goBack} closeOnOverlayClick={false}>
+    <Modal
+      isOpen={true}
+      size={size}
+      onClose={goBack}
+      closeOnOverlayClick={false}
+    >
       <Wrapper>
         <ModalOverlay />
         <ModalContent bgColor="#333">

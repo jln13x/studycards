@@ -22,6 +22,13 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ data }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const uploadWrapper = useRef<HTMLDivElement>(null);
 
+  const imageRef = useRef<string>();
+
+  const showImagePreview = (image: string)  => {
+    imageRef.current = image;
+    onOpen();
+  }
+
   return (
     <FieldArray name="images">
       {({ remove, push }) => (
@@ -61,7 +68,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ data }) => {
                     src={image}
                     maxH="100%"
                     flexGrow={0}
-                    onClick={onOpen}
+                    onClick={() => showImagePreview(image)}
                     _hover={{
                       transition: "0.2s ease-in-out",
                       opacity: "0.8",
@@ -83,7 +90,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ data }) => {
                 >
                   <Icon as={FaTrash} />
                 </Button>
-                <ImageModal isOpen={isOpen} onClose={onClose} image={image} />
+                <ImageModal isOpen={isOpen} onClose={onClose} image={imageRef.current || ''} />
               </Flex>
             ))
           ) : (
