@@ -143,7 +143,7 @@ export const StudyCard: React.FC<StudyCardProps> = ({
           width="100%"
         >
           <Box flexGrow={1}>
-            <Heading>{title}</Heading>
+            <Heading fontSize={{ base: 18, lg: 32 }}>{title}</Heading>
             <Tags tags={tags} />
           </Box>
 

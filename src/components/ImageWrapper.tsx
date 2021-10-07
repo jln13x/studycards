@@ -13,7 +13,7 @@ export const ImageWrapper: React.FC<ImageWrapperProps> = ({ images }) => {
       w="100%"
       flexWrap="wrap"
       py={4}
-      overflowY="scroll"
+      overflow="scroll"
       sx={{
         "::-webkit-scrollbar": {
           width: "4",
