@@ -36,7 +36,6 @@ export const Cards: React.FC = () => {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-    ...props
   } = useInfiniteCardsQuery(search);
 
   const { path } = useRouteMatch();
@@ -104,8 +103,8 @@ export const Cards: React.FC = () => {
               lg: 6,
             }}
           >
-            {queryData?.pages.map((page) => {
-              return page.data.map((card) => (
+            {queryData?.pages?.map((page) => {
+              return page?.data?.map((card) => (
                 <Box key={card._id} height="20vh">
                   <CardItem data={card} />
                 </Box>

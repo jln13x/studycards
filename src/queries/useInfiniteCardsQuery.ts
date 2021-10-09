@@ -29,11 +29,12 @@ export const useInfiniteCardsQuery = (
           page,
         },
       });
+
       return response.data;
     },
     {
       getNextPageParam: (lastPage) => {
-        return lastPage.metadata.nextPage;
+        return lastPage?.metadata?.nextPage;
       },
     }
   );
