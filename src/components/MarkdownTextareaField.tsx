@@ -18,11 +18,13 @@ type MarkdownTextareaFieldProps =
   React.InputHTMLAttributes<HTMLTextAreaElement> & {
     name: string;
     label: string;
+    rows?: number;
   };
 
 export const MarkdownTextareaField: React.FC<MarkdownTextareaFieldProps> = ({
   label,
   size: _,
+  rows,
   ...props
 }) => {
   const [field, { error }] = useField(props);
@@ -56,7 +58,7 @@ export const MarkdownTextareaField: React.FC<MarkdownTextareaFieldProps> = ({
                 updateText(e);
                 onChangeFieldFn(e);
               }}
-              rows={6}
+              rows={rows || 6}
               {...rest}
             />
             {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}

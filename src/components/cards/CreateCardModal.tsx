@@ -78,7 +78,7 @@ export const CreateCardModal: React.FC = () => {
         <Form>
           <CustomModal
             title="Create card"
-            size="6xl"
+            size="full"
             footer={
               <>
                 <CheckboxGroup>
@@ -127,6 +127,7 @@ export const CreateCardModal: React.FC = () => {
                 placeholder="Enter question..."
                 label="Question"
                 tabIndex={2}
+                rows={4}
               />
 
               <MarkdownTextareaField
@@ -134,6 +135,7 @@ export const CreateCardModal: React.FC = () => {
                 placeholder="Enter answer..."
                 label="Answer"
                 tabIndex={3}
+                rows={24}
               />
 
               <ImageUploadField data={values.images} />

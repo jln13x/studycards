@@ -78,7 +78,7 @@ export const EditCardModal: React.FC = () => {
       {({ isSubmitting, values }) => (
         <CustomModal
           title="Edit card"
-          size="6xl"
+          size="full"
           footer={
             <Button type="submit" isLoading={isSubmitting}>
               Edit
@@ -97,12 +97,14 @@ export const EditCardModal: React.FC = () => {
               name="question"
               placeholder="Enter question..."
               label="Question"
+              rows={4}
             />
 
             <MarkdownTextareaField
               name="answer"
               placeholder="Enter answer..."
               label="Answer"
+              rows={24}
             />
 
             <ImageUploadField data={values.images} />
